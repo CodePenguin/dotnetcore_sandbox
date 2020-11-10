@@ -57,9 +57,9 @@ jobs:
           fi
           # Delete output directory
           rm -r "$release_name"
-    - name: Publish
-      uses: softprops/action-gh-release@v1
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
       with:
-        files: "DotNetCoreSandBox-CI-*"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        name: code-coverage-report
+        path: DotNetCoreSandBox-CI-*
