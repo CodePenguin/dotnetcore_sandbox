@@ -47,7 +47,7 @@ jobs:
           dotnet publish DotNetCoreSandBox.Server --framework netcoreapp3.1 --runtime "${{ matrix.target }}" -c Release -o "$release_name/DotNetCoreSandBox.Server"
           dotnet publish DotNetCoreSandBox.Target --framework netcoreapp3.1 --runtime "${{ matrix.target }}" -c Release -o "$release_name/DotNetCoreSandBox.Target"
           dotnet publish DotNetCoreSandBox.Plugins.Core.Common --framework netcoreapp3.1 --runtime "${{ matrix.target }}" -c Release -o "$release_name/DotNetCoreSandBox.Server/plugins/DotNetCoreSandBox.Plugins.Core.Common"
-          cp "$release_name/DotNetCoreSandBox.Server/plugins" "$release_name/DotNetCoreSandBox.Target"
+          cp -r "$release_name/DotNetCoreSandBox.Server/plugins" "$release_name/DotNetCoreSandBox.Target"
           # Pack files
           if [ "${{ matrix.target }}" == "win-x64" ]; then
             # Pack to zip for Windows
