@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetCoreSandBox.Target", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetCoreSandBox.Plugins.Core.Common", "DotNetCoreSandBox.Plugins.Core.Common\DotNetCoreSandBox.Plugins.Core.Common.csproj", "{7F606D83-9504-4432-AD69-4CB4F0D63077}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetCoreSandBox.Plugins.Core.Windows", "DotNetCoreSandBox.Plugins.Core.Windows\DotNetCoreSandBox.Plugins.Core.Windows.csproj", "{4239B3F3-ECA4-4EC7-91B9-050A40D49CAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{7F606D83-9504-4432-AD69-4CB4F0D63077}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F606D83-9504-4432-AD69-4CB4F0D63077}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F606D83-9504-4432-AD69-4CB4F0D63077}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4239B3F3-ECA4-4EC7-91B9-050A40D49CAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4239B3F3-ECA4-4EC7-91B9-050A40D49CAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4239B3F3-ECA4-4EC7-91B9-050A40D49CAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4239B3F3-ECA4-4EC7-91B9-050A40D49CAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
