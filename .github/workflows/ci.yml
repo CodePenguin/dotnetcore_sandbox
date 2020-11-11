@@ -30,49 +30,74 @@ jobs:
     - name: Build Binaries
       shell: bash
       run: |
-          release_prefix="DotNetCoreSandBox-CI-"
-          common_args="--no-restore -v normal -c release
+        release_prefix="bin/DotNetCoreSandBox-CI"
+        plugin_path="bin/plugins"
+        common_args="-v m -c release --framework netcoreapp3.1"
+        platform_args="-p:PublishSingleFile=true --self-contained true"
 
-          # Build Common Plugins
-          dotnet publish DotNetCoreSandBox.Plugins.Core.Common $common_args -o "plugins/DotNetCoreSandBox.Plugins.Core.Common"
+        # Build Plugins
+        dotnet publish DotNetCoreSandBox.Plugins.Core.Common $common_args -o "$plugin_path/DotNetCoreSandBox.Plugins.Core.Common"
+        dotnet publish DotNetCoreSandBox.Plugins.Core.Windows $common_args -o "$plugin_path/DotNetCoreSandBox.Plugins.Core.Windows"
 
-          # Build Cross-Platform
-          release_name="$release_prefix-cross-platform"
-          dotnet publish DotNetCoreSandBox.Server $common_args -o "$release_name/DotNetCoreSandBox.Server"
-          dotnet publish DotNetCoreSandBox.Target $common_args -o "$release_name/DotNetCoreSandBox.Target"
-          cp -r "plugins" "$release_name/DotNetCoreSandBox.Server"
-          cp -r "plugins" "$release_name/DotNetCoreSandBox.Target"
+        # Build Cross-Platform
+        release_name="$release_prefix-cross-platform"
+        dotnet publish DotNetCoreSandBox.Server $common_args -o "$release_name/DotNetCoreSandBox.Server"
+        dotnet publish DotNetCoreSandBox.Target $common_args -o "$release_name/DotNetCoreSandBox.Target"
+        cp -r "$plugin_path" "$release_name/DotNetCoreSandBox.Server/plugins"
+        cp -r "$plugin_path" "$release_name/DotNetCoreSandBox.Target/plugins"
 
-          # Build Windows
-          rid=win-x64
-          release_name="$release_prefix-$rid"
-          dotnet publish DotNetCoreSandBox.Server --no-restore --verbosity normal -c Release -r rid -o "$release_name/DotNetCoreSandBox.Server"
-          dotnet publish DotNetCoreSandBox.Target --no-restore --verbosity normal -c Release -r rid -o "$release_name/DotNetCoreSandBox.Target"
-          dotnet publish DotNetCoreSandBox.Plugins.Core.Windows $common_args -o "$release_name/DotNetCoreSandBox.Server/plugins/plugins/DotNetCoreSandBox.Plugins.Core.Windows"
-          cp -r "plugins" "$release_name/DotNetCoreSandBox.Server"
-          cp -r "plugins" "$release_name/DotNetCoreSandBox.Target"
-          cp -r "$release_name/DotNetCoreSandBox.Server/plugins/plugins/DotNetCoreSandBox.Plugins.Core.Windows" "$release_name/DotNetCoreSandBox.Target/plugins"
+        # Build Linux
+        rid=linux-x64
+        release_name="$release_prefix-$rid"
+        dotnet publish DotNetCoreSandBox.Server $common_args -r $rid $platform_args -o "$release_name/DotNetCoreSandBox.Server"
+        dotnet publish DotNetCoreSandBox.Target $common_args -r $rid $platform_args -o "$release_name/DotNetCoreSandBox.Target"
+        mkdir -p "$release_name/DotNetCoreSandBox.Server/plugins/DotNetCoreSandBox.Plugins.Core.Common"
+        cp -r "$plugin_path/DotNetCoreSandBox.Plugins.Core.Common" "$release_name/DotNetCoreSandBox.Server/plugins/DotNetCoreSandBox.Plugins.Core.Common"
+        mkdir -p "$release_name/DotNetCoreSandBox.Target/plugins/DotNetCoreSandBox.Plugins.Core.Common"
+        cp -r "$plugin_path/DotNetCoreSandBox.Plugins.Core.Common" "$release_name/DotNetCoreSandBox.Target/plugins/DotNetCoreSandBox.Plugins.Core.Common"
 
-          # Build macOS
-          rid=osx-x64
-          release_name="$release_prefix-$rid"
-          dotnet publish DotNetCoreSandBox.Server --no-restore --verbosity normal -c Release -r rid -o "$release_name/DotNetCoreSandBox.Server"
-          dotnet publish DotNetCoreSandBox.Target --no-restore --verbosity normal -c Release -r rid -o "$release_name/DotNetCoreSandBox.Target"
-          cp -r "plugins" "$release_name/DotNetCoreSandBox.Server"
-          cp -r "plugins" "$release_name/DotNetCoreSandBox.Target"
+        # Build macOS
+        rid=osx-x64
+        release_name="$release_prefix-$rid"
+        dotnet publish DotNetCoreSandBox.Server $common_args -r $rid $platform_args -o "$release_name/DotNetCoreSandBox.Server"
+        dotnet publish DotNetCoreSandBox.Target $common_args -r $rid $platform_args -o "$release_name/DotNetCoreSandBox.Target"
+        mkdir -p "$release_name/DotNetCoreSandBox.Server/plugins/DotNetCoreSandBox.Plugins.Core.Common"
+        cp -r "$plugin_path/DotNetCoreSandBox.Plugins.Core.Common" "$release_name/DotNetCoreSandBox.Server/plugins/DotNetCoreSandBox.Plugins.Core.Common"
+        mkdir -p "$release_name/DotNetCoreSandBox.Target/plugins/DotNetCoreSandBox.Plugins.Core.Common"
+        cp -r "$plugin_path/DotNetCoreSandBox.Plugins.Core.Common" "$release_name/DotNetCoreSandBox.Target/plugins/DotNetCoreSandBox.Plugins.Core.Common"
 
-          # Pack files
-          if [ "${{ matrix.target }}" == "win-x64" ]; then
-            # Pack to zip for Windows
-            7z a -tzip "${release_name}.zip" "./${release_name}/*"
-          else
-          tar czvf "${release_name}.tar.gz" "$release_name"
-          fi
-          # Delete output directory
-          rm -r "$release_name"
+        # Build Windows
+        rid=win-x64
+        release_name="$release_prefix-$rid"
+        dotnet publish DotNetCoreSandBox.Server $common_args -r $rid $platform_args -o "$release_name/DotNetCoreSandBox.Server/"
+        dotnet publish DotNetCoreSandBox.Target $common_args -r $rid $platform_args -o "$release_name/DotNetCoreSandBox.Target"
+        cp -r "$plugin_path" "$release_name/DotNetCoreSandBox.Server/plugins"
+        cp -r "$plugin_path" "$release_name/DotNetCoreSandBox.Target/plugins"
+
+        # Pack files
+        cd $release_prefix-cross-platform
+        zip -r "../../$release_prefix-cross-platform.zip" ./*
+        cd -
+        tar czf "$release_prefix-linux-x64.tar.gz" -C "$release_prefix-linux-x64" .
+        tar czf "$release_prefix-osx-x64.tar.gz" -C "$release_prefix-osx-x64" .
+        cd $release_prefix-win-x64
+        zip -r "../../$release_prefix-win-x64.zip" ./*
+        cd -
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: DotNetCoreSandBox-CI-${{ matrix.target }}
-        path: DotNetCoreSandBox-CI-*
+        name: DotNetCoreSandBox-CI-cross-platform
+        path: bin/DotNetCoreSandBox-CI-cross-platform.zip
+      uses: actions/upload-artifact@v2
+      with:
+        name: DotNetCoreSandBox-CI-linux-x64
+        path: bin/DotNetCoreSandBox-CI-linux-x64.zip
+      uses: actions/upload-artifact@v2
+      with:
+        name: DotNetCoreSandBox-CI-osx-x64
+        path: bin/DotNetCoreSandBox-CI-osx-x64.zip
+      uses: actions/upload-artifact@v2
+      with:
+        name: DotNetCoreSandBox-CI-win-x64
+        path: bin/DotNetCoreSandBox-CI-win-x64.zip
