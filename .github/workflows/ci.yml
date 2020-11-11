@@ -29,7 +29,9 @@ jobs:
 
     - name: Build Binaries
       shell: bash
-      run: ./build.sh -m CI
+      run: |
+        chmod +x build.sh
+        ./build.sh -m CI
 
     - name: Upload Artifacts (Cross-Platform)
       uses: actions/upload-artifact@v2
