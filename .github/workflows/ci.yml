@@ -74,33 +74,23 @@ jobs:
         cp -r "$plugin_path" "$release_name/DotNetCoreSandBox.Server/plugins"
         cp -r "$plugin_path" "$release_name/DotNetCoreSandBox.Target/plugins"
 
-        # Pack files
-        cd $release_prefix-cross-platform
-        zip -r "../../$release_prefix-cross-platform.zip" ./*
-        cd -
-        tar czf "$release_prefix-linux-x64.tar.gz" -C "$release_prefix-linux-x64" .
-        tar czf "$release_prefix-osx-x64.tar.gz" -C "$release_prefix-osx-x64" .
-        cd $release_prefix-win-x64
-        zip -r "../../$release_prefix-win-x64.zip" ./*
-        cd -
-
     - name: Upload Artifacts (Cross-Platform)
       uses: actions/upload-artifact@v2
       with:
         name: DotNetCoreSandBox-CI-cross-platform
-        path: bin/DotNetCoreSandBox-CI-cross-platform.zip
+        path: bin/DotNetCoreSandBox-CI-cross-platform/**
     - name: Upload Artifacts (Linux)
       uses: actions/upload-artifact@v2
       with:
         name: DotNetCoreSandBox-CI-linux-x64
-        path: bin/DotNetCoreSandBox-CI-linux-x64.zip
+        path: bin/DotNetCoreSandBox-CI-linux-x64/**
     - name: Upload Artifacts (macOS)
       uses: actions/upload-artifact@v2
       with:
         name: DotNetCoreSandBox-CI-osx-x64
-        path: bin/DotNetCoreSandBox-CI-osx-x64.zip
+        path: bin/DotNetCoreSandBox-CI-osx-x64/**
     - name: Upload Artifacts (Windows)
       uses: actions/upload-artifact@v2
       with:
         name: DotNetCoreSandBox-CI-win-x64
-        path: bin/DotNetCoreSandBox-CI-win-x64.zip
+        path: bin/DotNetCoreSandBox-CI-win-x64/**
