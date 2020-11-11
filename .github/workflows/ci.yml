@@ -84,19 +84,22 @@ jobs:
         zip -r "../../$release_prefix-win-x64.zip" ./*
         cd -
 
-    - name: Upload Artifacts
+    - name: Upload Artifacts (Cross-Platform)
       uses: actions/upload-artifact@v2
       with:
         name: DotNetCoreSandBox-CI-cross-platform
         path: bin/DotNetCoreSandBox-CI-cross-platform.zip
+    - name: Upload Artifacts (Linux)
       uses: actions/upload-artifact@v2
       with:
         name: DotNetCoreSandBox-CI-linux-x64
         path: bin/DotNetCoreSandBox-CI-linux-x64.zip
+    - name: Upload Artifacts (macOS)
       uses: actions/upload-artifact@v2
       with:
         name: DotNetCoreSandBox-CI-osx-x64
         path: bin/DotNetCoreSandBox-CI-osx-x64.zip
+    - name: Upload Artifacts (Windows)
       uses: actions/upload-artifact@v2
       with:
         name: DotNetCoreSandBox-CI-win-x64
