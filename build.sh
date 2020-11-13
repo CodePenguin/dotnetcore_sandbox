@@ -19,7 +19,7 @@ fi
 
 echo "Build Mode: $mode"
 
-common_args="-v m -c Release --framework netcoreapp3.1"
+common_args="-v m -c Release --framework net5.0"
 platform_args="-p:PublishSingleFile=true --self-contained true"
 
 # Clean bin folder
